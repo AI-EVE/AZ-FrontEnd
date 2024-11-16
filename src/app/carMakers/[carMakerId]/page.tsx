@@ -102,7 +102,6 @@ export default function Page({ params: { carMakerId } }: Props) {
         setCarMakerResponseFull(data);
       })
       .catch((error) => {
-        console.error("Error:", error);
         toast({
           title: "Error",
           description: "An error occurred while fetching the car maker.",
@@ -180,7 +179,6 @@ export default function Page({ params: { carMakerId } }: Props) {
         });
       }
     } catch (error) {
-      console.error("Error:", error);
       toast({
         title: "Error",
         description: "An error occurred while adding the car maker.",
@@ -216,7 +214,6 @@ export default function Page({ params: { carMakerId } }: Props) {
         });
       }
     } catch (error) {
-      console.error("Error:", error);
       toast({
         title: "Error",
         description: "An error occurred while deleting the car maker.",
@@ -289,7 +286,6 @@ export default function Page({ params: { carMakerId } }: Props) {
         setNewModelName("");
       })
       .catch((error) => {
-        console.error("Error:", error);
         toast({
           title: "Error",
           description: "An error occurred while creating the car model.",
@@ -367,7 +363,6 @@ export default function Page({ params: { carMakerId } }: Props) {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
         toast({
           title: "Error",
           description: "An error occurred while editing the car model.",
@@ -416,7 +411,6 @@ export default function Page({ params: { carMakerId } }: Props) {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
         toast({
           title: "Error",
           description: "An error occurred while deleting the car model.",
@@ -486,7 +480,6 @@ export default function Page({ params: { carMakerId } }: Props) {
         setNewCarGenerationName("");
       })
       .catch((error) => {
-        console.error("Error:", error);
         toast({
           title: "Error",
           description: "An error occurred while creating the car generation.",
@@ -541,7 +534,6 @@ export default function Page({ params: { carMakerId } }: Props) {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
         toast({
           title: "Error",
           description: "An error occurred while deleting the car generation.",
@@ -614,7 +606,6 @@ export default function Page({ params: { carMakerId } }: Props) {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
         toast({
           title: "Error",
           description: "An error occurred while editing the car generation.",
@@ -835,91 +826,91 @@ export default function Page({ params: { carMakerId } }: Props) {
               Show Models
             </AccordionTrigger>
             <AccordionContent>
+              {showCarModelDeleteDialog && (
+                <div
+                  className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                  onClick={handleShowCarModelDeleteDialog}
+                >
+                  <div
+                    className="bg-[#18181b] p-4 rounded-lg w-full max-w-md mx-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <h3 className="text-amber-400 text-center font-bold text-xl mb-3">
+                      Delete Car Model
+                    </h3>
+                    <p className="text-center mt-4">
+                      Are you sure you want to delete this car model?
+                    </p>
+                    <div className="flex justify-between mt-4">
+                      <Button
+                        className="bg-amber-500 hover:bg-amber-300 active:bg-amber-300 font-bold"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (carModelDeleteId) {
+                            handleCarModelDelete();
+                          }
+                        }}
+                      >
+                        {loading ? "Deleting..." : "Delete"}
+                      </Button>
+                      <Button
+                        className="bg-[#f56565] hover:bg-[#893d3d] active:bg-[#893d3d] font-bold"
+                        onClick={handleShowCarModelDeleteDialog}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {showCarModelEditDialog && (
+                <div
+                  className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                  onClick={handleShowCarModelEditDialog}
+                >
+                  <form
+                    className="bg-[#18181b] p-4 rounded-lg w-full max-w-md mx-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <h3 className="text-amber-400 text-center font-bold text-xl mb-3">
+                      Edit Car Model
+                    </h3>
+                    <Input
+                      type="text"
+                      placeholder="Enter Car Model Name"
+                      value={newCarModelName}
+                      onChange={(e) => setNewCarModelName(e.target.value)}
+                      className={cn(
+                        "mb-4 p-2 border border-gray-300 rounded w-full text-white"
+                      )}
+                    />
+                    <div className="flex justify-between mt-4">
+                      <Button
+                        type="submit"
+                        className="bg-amber-500 hover:bg-amber-300 active:bg-amber-300 font-bold"
+                        onClick={(e) => {
+                          e.preventDefault();
+
+                          if (carModelEditedId) {
+                            handleCarModelEdit();
+                          }
+                        }}
+                      >
+                        {loading ? "Editing..." : "Edit"}
+                      </Button>
+                      <Button
+                        type="button"
+                        className="bg-[#f56565] hover:bg-[#893d3d] active:bg-[#893d3d] font-bold"
+                        onClick={handleShowCarModelEditDialog}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+              )}
               <div className="max-h-[50vh] overflow-y-auto">
                 <Table>
-                  {showCarModelDeleteDialog && (
-                    <div
-                      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                      onClick={handleShowCarModelDeleteDialog}
-                    >
-                      <div
-                        className="bg-[#18181b] p-4 rounded-lg w-full max-w-md mx-2"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <h3 className="text-amber-400 text-center font-bold text-xl mb-3">
-                          Delete Car Model
-                        </h3>
-                        <p className="text-center mt-4">
-                          Are you sure you want to delete this car model?
-                        </p>
-                        <div className="flex justify-between mt-4">
-                          <Button
-                            className="bg-amber-500 hover:bg-amber-300 active:bg-amber-300 font-bold"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (carModelDeleteId) {
-                                handleCarModelDelete();
-                              }
-                            }}
-                          >
-                            {loading ? "Deleting..." : "Delete"}
-                          </Button>
-                          <Button
-                            className="bg-[#f56565] hover:bg-[#893d3d] active:bg-[#893d3d] font-bold"
-                            onClick={handleShowCarModelDeleteDialog}
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {showCarModelEditDialog && (
-                    <div
-                      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                      onClick={handleShowCarModelEditDialog}
-                    >
-                      <form
-                        className="bg-[#18181b] p-4 rounded-lg w-full max-w-md mx-2"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <h3 className="text-amber-400 text-center font-bold text-xl mb-3">
-                          Edit Car Model
-                        </h3>
-                        <Input
-                          type="text"
-                          placeholder="Enter Car Model Name"
-                          value={newCarModelName}
-                          onChange={(e) => setNewCarModelName(e.target.value)}
-                          className={cn(
-                            "mb-4 p-2 border border-gray-300 rounded w-full text-white"
-                          )}
-                        />
-                        <div className="flex justify-between mt-4">
-                          <Button
-                            type="submit"
-                            className="bg-amber-500 hover:bg-amber-300 active:bg-amber-300 font-bold"
-                            onClick={(e) => {
-                              e.preventDefault();
-
-                              if (carModelEditedId) {
-                                handleCarModelEdit();
-                              }
-                            }}
-                          >
-                            {loading ? "Editing..." : "Edit"}
-                          </Button>
-                          <Button
-                            type="button"
-                            className="bg-[#f56565] hover:bg-[#893d3d] active:bg-[#893d3d] font-bold"
-                            onClick={handleShowCarModelEditDialog}
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                      </form>
-                    </div>
-                  )}
                   <TableCaption>A list of Models For This Maker.</TableCaption>
                   <TableHeader>
                     <TableRow>
