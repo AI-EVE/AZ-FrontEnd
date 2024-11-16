@@ -21,6 +21,7 @@ export default function SubmitProductMakerForm({
   const handleImageUploadInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length === 1) {
       setProductMakerImage(e.target.files[0]);
+      e.target.value = "";
     } else {
       setProductMakerImage(null);
     }

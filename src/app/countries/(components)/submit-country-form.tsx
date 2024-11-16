@@ -18,6 +18,7 @@ export default function SubmitCountryForm({
   const handleImageUploadInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length === 1) {
       setCountryImage(e.target.files[0]);
+      e.target.value = "";
     } else {
       setCountryImage(null);
     }
@@ -48,7 +49,7 @@ export default function SubmitCountryForm({
             }}
             value={countryName}
             type="text"
-            placeholder="Product Maker Name"
+            placeholder="Country Name"
             className="mt-2 bg-dark-2 text-white focus:border-amber-500 focus:ring-amber-500 rounded-md px-3 py-2 outline-none"
           />
 
@@ -82,7 +83,9 @@ export default function SubmitCountryForm({
           )}
 
           <input
-            onChange={(e) => handleImageUploadInput(e)}
+            onChange={(e) => {
+              handleImageUploadInput(e);
+            }}
             type="file"
             className="hidden"
             id="product-maker-image-upload"
