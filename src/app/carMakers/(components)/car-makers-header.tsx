@@ -58,10 +58,10 @@ export default function CarMakersHeader() {
         setIsFormVisible(false);
         router.refresh();
         console.log("Success:", result);
-      } else if (response.status === 409) {
+      } else if (response.status === 400) {
         toast({
           title: "Conflict",
-          description: "Car maker already exists.",
+          description: `${(await response.json()).message}`,
         });
       } else {
         toast({

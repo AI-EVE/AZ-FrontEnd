@@ -166,10 +166,10 @@ export default function Page({ params: { carMakerId } }: Props) {
         setCarMakerResponseFull((oldState) => ({ ...oldState, ...result }));
 
         // router.refresh();
-      } else if (response.status === 409) {
+      } else if (response.status === 400) {
         toast({
           title: "Conflict",
-          description: "Car maker already exists.",
+          description: `${(await response.json()).message}`,
         });
       } else {
         toast({
