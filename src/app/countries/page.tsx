@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ImagePlus, Pencil, SendHorizontal, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import SubmitCountryForm from "./(components)/submit-country-form";
+import React from "react";
 
 interface Country {
   id: string;
@@ -289,8 +290,8 @@ export default function Page() {
           <div className="flex flex-col sm:container mx-auto sm:px-4 gap-8">
             {countries.length > 0 ? (
               countries.map((country) => (
-                <>
-                  <div key={country.id} className="max-w-full">
+                <React.Fragment key={country.id}>
+                  <div className="max-w-full">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <h3 className="text-amber-500 font-semibold text-lg cursor-default">
@@ -452,7 +453,7 @@ export default function Page() {
                   </div>
 
                   <div className="w-[25%] h-[1px] mx-auto bg-amber-400 mb-8"></div>
-                </>
+                </React.Fragment>
               ))
             ) : (
               <div className="flex items-center justify-center h-[50vh]">
