@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageHeader from "./(components)/page-header";
 import SubmitCarSectionForm from "./(components)/submit-car-section-form";
 import { useToast } from "@/hooks/use-toast";
@@ -264,8 +264,8 @@ export default function Page() {
           <div className="flex flex-col sm:container mx-auto sm:px-4 gap-8">
             {carSections.length > 0 ? (
               carSections.map((carSection) => (
-                <>
-                  <div key={carSection.id} className="">
+                <React.Fragment key={carSection.id}>
+                  <div className="">
                     <div className="flex items-center justify-between gap-3">
                       <h3 className="text-amber-500 font-semibold text-lg cursor-default">
                         {carSection.name}
@@ -349,7 +349,7 @@ export default function Page() {
                     ) : null}
                   </div>
                   <div className="w-[25%] h-[1px] mx-auto bg-amber-400 mb-8"></div>
-                </>
+                </React.Fragment>
               ))
             ) : (
               <div className="flex items-center justify-center h-[50vh]">

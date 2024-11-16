@@ -8,57 +8,56 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ImagePlus, Pencil, SendHorizontal, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import SubmitProductMakerForm from "./(components)/submit-product-maker-form";
+import SubmitSocialTypeForm from "./(components)/submit-social-type-form";
 
-interface ProductMaker {
+interface SocialType {
   id: string;
-  name: string;
+  type: string;
   logoUrl: string;
 }
-interface ProductMakerMapped {
+interface SocialTypeMapped {
   id: string;
-  name: string;
+  type: string;
   logoUrl: string;
   isEditing: boolean;
-  newName: string;
-  newImage: File | null;
+  newType: string;
+  newLogo: File | null;
 }
 
 export default function Page() {
   const { toast } = useToast();
-  const [productMakers, setProductMakers] = useState<ProductMakerMapped[]>([]);
+  const [socialTypes, setSocialTypes] = useState<SocialTypeMapped[]>([]);
 
   const [loading, setLoading] = useState(false);
-  const [toggleAddProductMakerForm, setToggleAddProductMakerForm] =
-    useState(false);
+  const [toggleAddSocialTypeForm, setToggleAddSocialTypeForm] = useState(false);
 
-  // Load product makers
+  // Load social types
   useEffect(() => {
     setLoading(true);
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL_BACKEND}/productMakers`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL_BACKEND}/socialTypes`)
       .then(async (response) => {
         if (response.ok) {
           const data = await response.json();
-          const productMakersToMap = data.map((productMaker: ProductMaker) => ({
-            ...productMaker,
+          const socialTypesToMap = data.map((socialType: SocialType) => ({
+            ...socialType,
             isEditing: false,
-            newName: "",
+            newType: "",
           }));
-          setProductMakers(productMakersToMap);
+          setSocialTypes(socialTypesToMap);
           return;
         }
 
         toast({
           title: "Error",
-          description: "An error occurred while loading product makers",
+          description: "An error occurred while loading social types",
           variant: "destructive",
         });
       })
       .catch((error) => {
         toast({
           title: "Error",
-          description: "An error occurred while loading product makers",
+          description: "An error occurred while loading social types",
           variant: "destructive",
         });
       })
@@ -67,18 +66,14 @@ export default function Page() {
       });
   }, []);
 
-  // Add a new product maker
-  const handleAddProductMaker = (
-    productMakerName: string,
-    productMakerImage: File | null
+  // Add a new social type
+  const handleAddSocialType = (
+    socialTypeName: string,
+    socialTypeImage: File | null
   ) => {
     if (loading) return;
 
-    if (
-      !productMakerName ||
-      productMakerName.trim() === "" ||
-      !productMakerImage
-    ) {
+    if (!socialTypeName || socialTypeName.trim() === "" || !socialTypeImage) {
       toast({
         title: "Empty Fields",
         description: "Make Sure To Enter A Both Fields",
@@ -90,12 +85,12 @@ export default function Page() {
     setLoading(true);
 
     const formData = new FormData();
-    formData.append("name", productMakerName);
-    if (productMakerImage) {
-      formData.append("logo", productMakerImage);
+    formData.append("type", socialTypeName);
+    if (socialTypeImage) {
+      formData.append("logo", socialTypeImage);
     }
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL_BACKEND}/productmakers`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL_BACKEND}/socialtypes`, {
       method: "POST",
       body: formData,
       headers: {
@@ -107,28 +102,28 @@ export default function Page() {
         if (response.ok) {
           toast({
             title: "Success",
-            description: "Product Maker added successfully",
+            description: "Social Type added successfully",
           });
 
           const newProdcutType = await response.json();
 
-          setProductMakers((prev) => [
+          setSocialTypes((prev) => [
             ...prev,
             {
               ...newProdcutType,
               isEditing: false,
-              newName: "",
-              newImage: null,
+              newType: "",
+              newLogo: null,
             },
           ]);
 
-          setToggleAddProductMakerForm(false);
+          setToggleAddSocialTypeForm(false);
           return;
         }
 
         const error = await response.json();
         toast({
-          title: "Empty Name",
+          title: "Empty Fields",
           description: error.message || "Make Sure To Enter Both Fields",
           variant: "destructive",
         });
@@ -136,7 +131,7 @@ export default function Page() {
       .catch((error) => {
         toast({
           title: "Error",
-          description: "An error occurred while adding the product maker",
+          description: "An error occurred while adding the social type",
           variant: "destructive",
         });
       })
@@ -145,14 +140,14 @@ export default function Page() {
       });
   };
 
-  // Edit a product maker
-  const handleEditProductMaker = (productMaker: ProductMakerMapped) => {
+  // Edit a social type
+  const handleEditSocialType = (socialType: SocialTypeMapped) => {
     if (loading) return;
 
-    if (!productMaker.newName && !productMaker.newImage) {
+    if (!socialType.newType && !socialType.newLogo) {
       toast({
-        title: "Empty Name",
-        description: "Enter at least a new name or a new image",
+        title: "Empty Fields",
+        description: "Enter at least a new name or a new logo",
         variant: "destructive",
       });
       return;
@@ -161,15 +156,15 @@ export default function Page() {
     setLoading(true);
 
     const formData = new FormData();
-    if (productMaker.newName) {
-      formData.append("name", productMaker.newName);
+    if (socialType.newType) {
+      formData.append("type", socialType.newType);
     }
-    if (productMaker.newImage) {
-      formData.append("logo", productMaker.newImage);
+    if (socialType.newLogo) {
+      formData.append("logo", socialType.newLogo);
     }
 
     fetch(
-      `${process.env.NEXT_PUBLIC_API_URL_BACKEND}/productmakers/${productMaker.id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_BACKEND}/socialtypes/${socialType.id}`,
       {
         method: "PUT",
         body: formData,
@@ -182,20 +177,20 @@ export default function Page() {
             description: "Product Maker edited successfully",
           });
 
-          const newProductMaker = await response.json();
+          const newSocialType = await response.json();
 
-          setProductMakers((prev) =>
-            prev.map((prevProductMaker) => {
-              if (prevProductMaker.id !== productMaker.id) {
-                return prevProductMaker;
+          setSocialTypes((prev) =>
+            prev.map((prevSocialType) => {
+              if (prevSocialType.id !== socialType.id) {
+                return prevSocialType;
               } else {
                 return {
-                  ...prevProductMaker,
-                  name: newProductMaker.name,
-                  logoUrl: newProductMaker.logoUrl,
+                  ...prevSocialType,
+                  type: newSocialType.type,
+                  logoUrl: newSocialType.logoUrl,
                   isEditing: true,
-                  newName: "",
-                  newImage: null,
+                  newType: "",
+                  newLogo: null,
                 };
               }
             })
@@ -213,7 +208,7 @@ export default function Page() {
       .catch((error) => {
         toast({
           title: "Error",
-          description: "An error occurred while editing the product maker",
+          description: "An error occurred while editing the social type",
           variant: "destructive",
         });
       })
@@ -222,14 +217,14 @@ export default function Page() {
       });
   };
 
-  // Delete a product maker
-  const handleDeleteProductMaker = (productMaker: ProductMakerMapped) => {
+  // Delete a social type
+  const handleDeleteSocialType = (socialType: SocialTypeMapped) => {
     if (loading) return;
 
     setLoading(true);
 
     fetch(
-      `${process.env.NEXT_PUBLIC_API_URL_BACKEND}/productmakers/${productMaker.id}`,
+      `${process.env.NEXT_PUBLIC_API_URL_BACKEND}/socialtypes/${socialType.id}`,
       {
         method: "DELETE",
       }
@@ -241,10 +236,8 @@ export default function Page() {
             description: "Product Maker deleted successfully",
           });
 
-          setProductMakers((prev) =>
-            prev.filter(
-              (prevProductMaker) => prevProductMaker.id !== productMaker.id
-            )
+          setSocialTypes((prev) =>
+            prev.filter((prevSocialType) => prevSocialType.id !== socialType.id)
           );
           return;
         }
@@ -259,7 +252,7 @@ export default function Page() {
       .catch((error) => {
         toast({
           title: "Error",
-          description: "An error occurred while deleting the product maker",
+          description: "An error occurred while deleting the social type",
           variant: "destructive",
         });
       })
@@ -269,12 +262,12 @@ export default function Page() {
   };
 
   const onPageHeaderButtonClick = () => {
-    setToggleAddProductMakerForm(!toggleAddProductMakerForm);
+    setToggleAddSocialTypeForm(!toggleAddSocialTypeForm);
   };
 
-  const closeAddProductMakerForm = () => {
+  const closeAddSocialTypeForm = () => {
     if (loading) return;
-    setToggleAddProductMakerForm(false);
+    setToggleAddSocialTypeForm(false);
   };
 
   return (
@@ -285,10 +278,10 @@ export default function Page() {
         </div>
       )}
 
-      {toggleAddProductMakerForm ? (
-        <SubmitProductMakerForm
-          handleAddProductMaker={handleAddProductMaker}
-          closeForm={closeAddProductMakerForm}
+      {toggleAddSocialTypeForm ? (
+        <SubmitSocialTypeForm
+          handleAddSocialType={handleAddSocialType}
+          closeForm={closeAddSocialTypeForm}
         />
       ) : null}
 
@@ -297,43 +290,43 @@ export default function Page() {
 
         <div className="flex-1 overflow-auto">
           <div className="flex flex-col sm:container mx-auto sm:px-4 gap-8">
-            {productMakers.length > 0 ? (
-              productMakers.map((productMaker) => (
-                <React.Fragment key={productMaker.id}>
+            {socialTypes.length > 0 ? (
+              socialTypes.map((socialType) => (
+                <React.Fragment key={socialType.id}>
                   <div className="max-w-full">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <h3 className="text-amber-500 font-semibold text-lg cursor-default">
-                          {productMaker.name}
+                          {socialType.type}
                         </h3>
 
                         <img
-                          src={productMaker.logoUrl}
-                          alt={productMaker.name}
+                          src={socialType.logoUrl}
+                          alt={socialType.type}
                           className="w-10 h-10 object-cover rounded-full border border-amber-500"
                         />
                       </div>
                       <Switch
                         onCheckedChange={(value) => {
                           if (loading) return;
-                          setProductMakers((prev) =>
-                            prev.map((prevProductMaker) => {
-                              if (prevProductMaker.id !== productMaker.id) {
+                          setSocialTypes((prev) =>
+                            prev.map((prevSocialType) => {
+                              if (prevSocialType.id !== socialType.id) {
                                 return {
-                                  ...prevProductMaker,
+                                  ...prevSocialType,
                                   isEditing: false,
-                                  newName: "",
-                                  newImage: null,
+                                  newType: "",
+                                  newLogo: null,
                                 };
                               } else {
                                 if (value) {
                                   return {
-                                    ...prevProductMaker,
+                                    ...prevSocialType,
                                     isEditing: true,
                                   };
                                 } else {
                                   return {
-                                    ...prevProductMaker,
+                                    ...prevSocialType,
                                     isEditing: false,
                                   };
                                 }
@@ -341,38 +334,36 @@ export default function Page() {
                             })
                           );
                         }}
-                        checked={productMaker.isEditing}
+                        checked={socialType.isEditing}
                         className="data-[state=checked]:bg-amber-500"
                       />
                     </div>
-                    {productMaker.isEditing ? (
+                    {socialType.isEditing ? (
                       <>
                         <form
                           onSubmit={(e) => {
                             e.preventDefault();
-                            handleEditProductMaker(productMaker);
+                            handleEditSocialType(socialType);
                           }}
                           className="flex flex-col  gap-2"
                         >
                           <div className="flex items-center gap-2">
                             <Input
                               onChange={(e) => {
-                                setProductMakers((prev) =>
-                                  prev.map((prevProductMaker) => {
-                                    if (
-                                      prevProductMaker.id !== productMaker.id
-                                    ) {
-                                      return prevProductMaker;
+                                setSocialTypes((prev) =>
+                                  prev.map((prevSocialType) => {
+                                    if (prevSocialType.id !== socialType.id) {
+                                      return prevSocialType;
                                     } else {
                                       return {
-                                        ...prevProductMaker,
-                                        newName: e.target.value,
+                                        ...prevSocialType,
+                                        newType: e.target.value,
                                       };
                                     }
                                   })
                                 );
                               }}
-                              value={productMaker.newName}
+                              value={socialType.newType}
                               type="text"
                               placeholder="New Name?"
                               className="mt-2 bg-dark-2 text-white md:max-w-[70%] mr-auto focus:border-amber-500 focus:ring-amber-500 rounded-md px-3 py-2 outline-none"
@@ -387,7 +378,7 @@ export default function Page() {
                               type="button"
                               onClick={(e) => {
                                 e.preventDefault();
-                                handleDeleteProductMaker(productMaker);
+                                handleDeleteSocialType(socialType);
                               }}
                               className="mt-2 bg-red-500  hover:bg-red-600 rounded-md px-3 py-2"
                             >
@@ -399,37 +390,34 @@ export default function Page() {
                             onClick={(e) =>
                               document
                                 .getElementById(
-                                  `product-maker-image-upload-${productMaker.id}`
+                                  `social-type-logo-upload-${socialType.id}`
                                 )
                                 ?.click()
                             }
                           >
-                            {productMaker.newImage ? (
+                            {socialType.newLogo ? (
                               <div
                                 className="w-full h-full flex justify-center"
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <img
                                   onClick={(_) => {
-                                    setProductMakers((prev) =>
-                                      prev.map((prevProductMaker) => {
+                                    setSocialTypes((prev) =>
+                                      prev.map((prevSocialType) => {
                                         if (
-                                          prevProductMaker.id !==
-                                          productMaker.id
+                                          prevSocialType.id !== socialType.id
                                         ) {
-                                          return prevProductMaker;
+                                          return prevSocialType;
                                         } else {
                                           return {
-                                            ...prevProductMaker,
-                                            newImage: null,
+                                            ...prevSocialType,
+                                            newLogo: null,
                                           };
                                         }
                                       })
                                     );
                                   }}
-                                  src={URL.createObjectURL(
-                                    productMaker.newImage
-                                  )}
+                                  src={URL.createObjectURL(socialType.newLogo)}
                                   alt="preview"
                                   className="h-full object-cover"
                                 />
@@ -441,16 +429,14 @@ export default function Page() {
                             <input
                               onChange={(e) => {
                                 if (!e.target.files) return;
-                                setProductMakers((prev) =>
-                                  prev.map((prevProductMaker) => {
-                                    if (
-                                      prevProductMaker.id !== productMaker.id
-                                    ) {
-                                      return prevProductMaker;
+                                setSocialTypes((prev) =>
+                                  prev.map((prevSocialType) => {
+                                    if (prevSocialType.id !== socialType.id) {
+                                      return prevSocialType;
                                     } else {
                                       return {
-                                        ...prevProductMaker,
-                                        newImage: e.target.files
+                                        ...prevSocialType,
+                                        newLogo: e.target.files
                                           ? e.target.files[0]
                                           : null,
                                       };
@@ -460,7 +446,7 @@ export default function Page() {
                               }}
                               type="file"
                               className="hidden"
-                              id={`product-maker-image-upload-${productMaker.id}`}
+                              id={`social-type-logo-upload-${socialType.id}`}
                               accept="image/*"
                               multiple={false}
                             />
@@ -476,7 +462,7 @@ export default function Page() {
             ) : (
               <div className="flex items-center justify-center h-[50vh]">
                 <p className="text-amber-500 font-semibold text-lg">
-                  No Product Maker Found
+                  No Social Types Found
                 </p>
               </div>
             )}

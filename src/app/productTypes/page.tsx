@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Pencil, SendHorizontal, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import SubmitProductTypeForm from "./(components)/submit-product-type-form";
+import React from "react";
 
 interface ProductType {
   id: string;
@@ -268,8 +269,8 @@ export default function Page() {
           <div className="flex flex-col sm:container mx-auto sm:px-4 gap-8">
             {productTypes.length > 0 ? (
               productTypes.map((productType) => (
-                <>
-                  <div key={productType.id} className="max-w-full">
+                <React.Fragment key={productType.id}>
+                  <div className="max-w-full">
                     <div className="flex items-center justify-between gap-3">
                       <h3 className="text-amber-500 font-semibold text-lg cursor-default">
                         {productType.name}
@@ -353,7 +354,7 @@ export default function Page() {
                     ) : null}
                   </div>
                   <div className="w-[25%] h-[1px] mx-auto bg-amber-400 mb-8"></div>
-                </>
+                </React.Fragment>
               ))
             ) : (
               <div className="flex items-center justify-center h-[50vh]">

@@ -3,24 +3,27 @@ import { Input } from "@/components/ui/input";
 import { ImagePlus, SendHorizontal } from "lucide-react";
 import { useState } from "react";
 
-interface SubmitCountryFormProps {
-  handleAddCountry: (countryName: string, countryImage: File | null) => void;
+interface SubmitSocialTypeFormProps {
+  handleAddSocialType: (
+    socialTypeName: string,
+    socialTypeImage: File | null
+  ) => void;
   closeForm: () => void;
 }
 
-export default function SubmitCountryForm({
-  handleAddCountry,
+export default function SubmitSocialTypeForm({
+  handleAddSocialType,
   closeForm,
-}: SubmitCountryFormProps) {
-  const [countryName, setCountryName] = useState("");
-  const [countryImage, setCountryImage] = useState<File | null>(null);
+}: SubmitSocialTypeFormProps) {
+  const [socialTypeName, setSocialTypeName] = useState("");
+  const [socialTypeImage, setSocialTypeImage] = useState<File | null>(null);
 
   const handleImageUploadInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length === 1) {
-      setCountryImage(e.target.files[0]);
+      setSocialTypeImage(e.target.files[0]);
       e.target.value = "";
     } else {
-      setCountryImage(null);
+      setSocialTypeImage(null);
     }
   };
 
@@ -37,7 +40,7 @@ export default function SubmitCountryForm({
         }}
         onSubmit={(e) => {
           e.preventDefault();
-          handleAddCountry(countryName, countryImage);
+          handleAddSocialType(socialTypeName, socialTypeImage);
         }}
         className="flex flex-col gap-2 fixed"
       >
@@ -45,11 +48,11 @@ export default function SubmitCountryForm({
           <Input
             onChange={(e) => {
               e.preventDefault();
-              setCountryName(e.target.value);
+              setSocialTypeName(e.target.value);
             }}
-            value={countryName}
+            value={socialTypeName}
             type="text"
-            placeholder="Country Name"
+            placeholder="Product Maker Name"
             className="mt-2 bg-dark-2 text-white focus:border-amber-500 focus:ring-amber-500 rounded-md px-3 py-2 outline-none"
           />
 
@@ -63,17 +66,17 @@ export default function SubmitCountryForm({
         <div
           className="flex items-center justify-center h-32 w-full border border-input shadow-sm bg-background rounded-md"
           onClick={(e) =>
-            document.getElementById("country-image-upload")?.click()
+            document.getElementById("social-type-image-upload")?.click()
           }
         >
-          {countryImage ? (
+          {socialTypeImage ? (
             <div
               className="w-full h-full flex justify-center"
               onClick={(e) => e.stopPropagation()}
             >
               <img
-                onClick={(_) => setCountryImage(null)}
-                src={URL.createObjectURL(countryImage)}
+                onClick={(_) => setSocialTypeImage(null)}
+                src={URL.createObjectURL(socialTypeImage)}
                 alt="preview"
                 className="h-full object-cover"
               />
@@ -83,12 +86,10 @@ export default function SubmitCountryForm({
           )}
 
           <input
-            onChange={(e) => {
-              handleImageUploadInput(e);
-            }}
+            onChange={(e) => handleImageUploadInput(e)}
             type="file"
             className="hidden"
-            id="country-image-upload"
+            id="social-type-image-upload"
             accept="image/*"
             multiple={false}
           />
