@@ -1,7 +1,7 @@
 export interface CarMakerResponseFull {
   id: number;
   name: string;
-  logoUrl: string;
+  logo: string;
   carModels: {
     id: number;
     name: string;

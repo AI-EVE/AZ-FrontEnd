@@ -166,7 +166,7 @@ export default function Page({ params: { carMakerId } }: Props) {
         setCarMakerResponseFull((oldState) => ({ ...oldState, ...result }));
 
         // router.refresh();
-      } else if (response.status === 400) {
+      } else if (response.status === 409) {
         toast({
           title: "Conflict",
           description: `${(await response.json()).message}`,
@@ -205,7 +205,7 @@ export default function Page({ params: { carMakerId } }: Props) {
         });
         router.replace("/carMakers");
         router.refresh();
-      } else if (response.status === 400) {
+      } else if (response.status === 409) {
         toast({
           title: "Failed To Delete",
           description:
@@ -756,11 +756,11 @@ export default function Page({ params: { carMakerId } }: Props) {
         </h3>
 
         <div
-          onClick={() => setImage(carMakerResponseFull?.logoUrl ?? null)}
+          onClick={() => setImage(carMakerResponseFull?.logo ?? null)}
           className="rounded-lg mx-auto border-[2px] border-amber-400 w-fit h-[20vh] sm:h-[40vh] mt-5 overflow-hidden"
         >
           <img
-            src={carMakerResponseFull?.logoUrl}
+            src={carMakerResponseFull?.logo}
             alt=""
             className=" object-cover  h-full"
           />

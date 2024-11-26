@@ -58,7 +58,7 @@ export default function CarMakersHeader() {
         setIsFormVisible(false);
         router.refresh();
         console.log("Success:", result);
-      } else if (response.status === 400) {
+      } else if (response.status === 409) {
         toast({
           title: "Conflict",
           description: `${(await response.json()).message}`,
